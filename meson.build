@@ -6,10 +6,14 @@ project('crouter', 'c',
 # not the executables that use the library.
 lib_args = ['-DBUILDING_MESON_LIBRARY']
 
+python_dep = dependency('python3', modules:['Python'], required: true)
+
 shared_library('crouter', 'crouter.c',
-               install : true,
-               c_args : lib_args
-)
+       install : true,
+       c_args : lib_args,
+       dependencies: python_dep)
+
+
 
 #cython_build = custom_target(
 #    'cython_build',

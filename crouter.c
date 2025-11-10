@@ -4,18 +4,26 @@
 #include "crouter.h"
 #include "common.h"
 
-void crouter(void) {
+void crouter(PyObject *py_routes) {
    printf("Parsing route...\n");
+
+
+
    RegisteredRoute *single_route = registered_routes_init("/", "home");
    int err = registered_routes_insert(single_route, "/blogs", "blog_handler");
 
    if (err != REGISTERED_ROUTER_ALLOCATION_ERROR)
       printf("Successfully stored route\n");
 
-   free(single_route->next->path);
-   free(single_route->next->handler_name);
-   free(single_route->path);
-   free(single_route->handler_name);
+   while (single_route->next != NULL)
+   {
+      if (single_route->next != NULL)
+      {
+         free(single_route->path);
+         free(single_route->handler_name);
+         single_route = single_route->next;
+      }
+   }
    free(single_route);
 }
 
@@ -60,11 +68,18 @@ int registered_routes_insert(RegisteredRoute *const r, const char *path, const c
    temp_r->path = NULL;
    temp_r->path = malloc(sizeof(char) * PATH_SIZE);
    if (temp_r->path == NULL)
+   {
+      free(temp_r);
       return REGISTERED_ROUTER_ALLOCATION_ERROR;
+   }
    temp_r->handler_name = NULL;
    temp_r->handler_name = malloc(sizeof(char) * HANDLER_NAME_SIZE);
    if (temp_r->handler_name == NULL)
+   {
+      free(temp_r->path);
+      free(temp_r);
       return REGISTERED_ROUTER_ALLOCATION_ERROR;
+   }
    temp_r->next = NULL;
    return 0;
 }

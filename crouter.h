@@ -1,6 +1,8 @@
 #ifndef CROUTER_LIBRARY_H
 #define CROUTER_LIBRARY_H
 
+#include <Python.h>
+
 // Structs
 typedef struct RegisteredRoute_
 {
@@ -16,7 +18,7 @@ typedef struct CRouter_
 } CRouter;
 
 // Functions
-void crouter(void);
+void crouter(PyObject *py_routes);
 
 /**
  * The caller has the responsibility to deallocate all memory unless NULL is returned.
@@ -27,7 +29,8 @@ void crouter(void);
 RegisteredRoute *registered_routes_init(const char *path, const char *handler_name);
 
 /**
- *
+ * the caller has the responsibility to deallocate all memory from the list
+ * unless < 0 is returned.
  * @param r
  * @param path
  * @param handler_name
