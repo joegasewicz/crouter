@@ -1,4 +1,4 @@
-from .router import CRouter
+from bindings import CRouter
 
 
 class HomeHandler:

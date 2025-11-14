@@ -1,6 +1,7 @@
 from cpython.ref cimport PyObject
 
-cimport router
+cdef extern from "../crouter.h":
+    void crouter(PyObject *routes)
 
 cdef class CRouter:
 
@@ -9,4 +10,4 @@ cdef class CRouter:
 
     def parse(self, routes):
         cdef PyObject *py_routes = <PyObject *>routes;
-        router.crouter(py_routes)
+        crouter(py_routes)
