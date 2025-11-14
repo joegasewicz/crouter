@@ -66,7 +66,7 @@ int registered_routes_insert(RegisteredRoute *const r, const char *path, const c
    newNode->path = malloc(sizeof(char) * PATH_SIZE);
    if (newNode->path == NULL)
    {
-      free(newNode); // So here we want to abandon the next node, remove any memory and ext, is this ok so far?
+      free(newNode);
       return REGISTERED_ROUTER_ALLOCATION_ERROR;
    }
    strcpy(newNode->path, path);
