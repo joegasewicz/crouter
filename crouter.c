@@ -23,8 +23,12 @@ void crouter(PyObject *py_routes) {
          return; // TODO improve...
 
       const char *c_path = PyUnicode_AsUTF8(path);
-      printf("path ------> %s\n", c_path);
+
       // handler
+      PyObject *name_attr = PyObject_GetAttrString(handlerClass, "__name__");
+      const char *handler_class_name = PyUnicode_AsUTF8(name_attr);
+      printf("path ------> %s\n", c_path);
+      printf("path ------> %s\n", handler_class_name);
 
    }
 
