@@ -1,6 +1,7 @@
 #ifndef CROUTER_LIBRARY_H
 #define CROUTER_LIBRARY_H
 
+#include <common.h>
 #include <Python.h>
 
 // Structs
@@ -8,6 +9,7 @@ typedef struct RegisteredRoute_
 {
      char *path;
      char *handler_name;
+     const char *methods[MAX_METHODS];
      struct RegisteredRoute_ *next;
 } RegisteredRoute;
 

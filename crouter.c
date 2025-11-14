@@ -29,6 +29,7 @@ void crouter(PyObject *py_routes) {
       const char *handler_class_name = PyUnicode_AsUTF8(name_attr);
       printf("path ------> %s\n", c_path);
       printf("path ------> %s\n", handler_class_name);
+      // get handler class methods
 
    }
 
