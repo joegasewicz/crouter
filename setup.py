@@ -12,7 +12,7 @@ ext = Extension(
         "crouter/crouter.pyx",
         "crouter.c",
     ],
-    include_dirs=[here],
+    include_dirs=["crouter"],
     extra_compile_args=[],
     extra_link_args=[],
     language="c",

@@ -1,5 +1,15 @@
 from crouter import CRouter
 
+
+class HomeHandler:
+    pass
+
+
+routes = [
+    ("/", HomeHandler),
+]
+
+
 if __name__ == "__main__":
     router = CRouter()
-    router.parse()
+    router.parse(routes)

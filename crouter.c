@@ -7,8 +7,6 @@
 void crouter(PyObject *py_routes) {
    printf("Parsing route...\n");
 
-
-
    RegisteredRoute *single_route = registered_routes_init("/", "home");
    int err = registered_routes_insert(single_route, "/blogs", "blog_handler");
 
@@ -33,6 +31,7 @@ RegisteredRoute *registered_routes_init(const char *path, const char *handler_na
    r = malloc(sizeof(RegisteredRoute));
    if (r == NULL)
       return NULL;
+   r->next = NULL;
    r->path = NULL;
    r->path = malloc(sizeof(char) * PATH_SIZE);
    if (r->path == NULL)
@@ -58,28 +57,28 @@ int registered_routes_insert(RegisteredRoute *const r, const char *path, const c
 {
    RegisteredRoute *temp_r = r;
    while (temp_r->next != NULL)
-   {
       temp_r = temp_r->next;
-   }
-   temp_r->next = NULL;
-   temp_r->next = malloc(sizeof(RegisteredRoute));
-   if (temp_r->next == NULL)
+
+   RegisteredRoute *newNode = malloc(sizeof(RegisteredRoute));
+   if (newNode == NULL)
       return REGISTERED_ROUTER_ALLOCATION_ERROR;
-   temp_r->path = NULL;
-   temp_r->path = malloc(sizeof(char) * PATH_SIZE);
-   if (temp_r->path == NULL)
+
+   newNode->path = malloc(sizeof(char) * PATH_SIZE);
+   if (newNode->path == NULL)
    {
-      free(temp_r);
+      free(newNode); // So here we want to abandon the next node, remove any memory and ext, is this ok so far?
       return REGISTERED_ROUTER_ALLOCATION_ERROR;
    }
-   temp_r->handler_name = NULL;
-   temp_r->handler_name = malloc(sizeof(char) * HANDLER_NAME_SIZE);
-   if (temp_r->handler_name == NULL)
+   strcpy(newNode->path, path);
+
+   newNode->handler_name = malloc(sizeof(char) * HANDLER_NAME_SIZE);
+   if (newNode->handler_name == NULL)
    {
-      free(temp_r->path);
-      free(temp_r);
+      free(newNode->path);
+      free(newNode);
       return REGISTERED_ROUTER_ALLOCATION_ERROR;
    }
-   temp_r->next = NULL;
+   strcpy(newNode->handler_name, handler_name);
+   temp_r->next = newNode;
    return 0;
 }
