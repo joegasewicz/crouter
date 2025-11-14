@@ -2,11 +2,13 @@ from bindings import CRouter
 
 
 class HomeHandler:
-    pass
+
+    def get(self, req, resp):
+        return {}
 
 
 routes = [
-    ("/", HomeHandler),
+    ("/noah", HomeHandler),
 ]
 
 

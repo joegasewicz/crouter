@@ -8,10 +8,15 @@ lib_args = ['-DBUILDING_MESON_LIBRARY']
 
 python_dep = dependency('python3', modules:['Python'], required: true)
 
+python_inc = include_directories('/opt/homebrew/Cellar/python@3.14/3.14.0/Frameworks/Python.framework/Versions/3.14/include/python3.14')
+
 shared_library('crouter', 'crouter.c',
        install : true,
        c_args : lib_args,
-       dependencies: python_dep)
+       include_directories: python_inc,
+       link_args: ['-F/opt/homebrew/Cellar/python@3.14/3.14.0/Frameworks', '-framework', 'Python'],
+       dependencies: python_dep,
+)
 
 
 

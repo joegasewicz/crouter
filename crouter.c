@@ -5,7 +5,30 @@
 #include "common.h"
 
 void crouter(PyObject *py_routes) {
-   printf("Parsing route...\n");
+   if (!PyList_Check(py_routes))
+      return;
+   Py_ssize_t listSize = PyList_Size(py_routes);
+   for (Py_ssize_t i = 0; i < listSize; i++)
+   {
+      PyObject *tuple_item = PyList_GetItem(py_routes, i);
+      if (!PyTuple_Check(tuple_item))
+         return; // TODO think about this...
+      Py_ssize_t tuple_size = PyTuple_Size(tuple_item);
+      if (tuple_size != 2)
+         return; // TODO improve...
+      PyObject *path = PyTuple_GetItem(tuple_item, 0);
+      PyObject *handlerClass = PyTuple_GetItem(tuple_item, 1);
+
+      if (!PyUnicode_Check(path))
+         return; // TODO improve...
+
+      const char *c_path = PyUnicode_AsUTF8(path);
+      printf("path ------> %s\n", c_path);
+      // handler
+
+   }
+
+
 
    RegisteredRoute *single_route = registered_routes_init("/", "home");
    int err = registered_routes_insert(single_route, "/blogs", "blog_handler");
