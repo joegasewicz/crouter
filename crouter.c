@@ -4,18 +4,29 @@
 #include "crouter.h"
 #include "common.h"
 
+
+// Static definitions
+static void get_class_methods(PyObject *handler_class, char *methods[MAX_METHODS]);
+static void init_methods(char *methods[MAX_METHODS]);
+
+
 void crouter(PyObject *py_routes) {
    if (!PyList_Check(py_routes))
       return;
+
    Py_ssize_t listSize = PyList_Size(py_routes);
+
    for (Py_ssize_t i = 0; i < listSize; i++)
    {
+      const char *methods[MAX_METHODS];
       PyObject *tuple_item = PyList_GetItem(py_routes, i);
       if (!PyTuple_Check(tuple_item))
          return; // TODO think about this...
+
       Py_ssize_t tuple_size = PyTuple_Size(tuple_item);
       if (tuple_size != 2)
          return; // TODO improve...
+
       PyObject *path = PyTuple_GetItem(tuple_item, 0);
       PyObject *handlerClass = PyTuple_GetItem(tuple_item, 1);
 
@@ -27,14 +38,12 @@ void crouter(PyObject *py_routes) {
       // handler
       PyObject *name_attr = PyObject_GetAttrString(handlerClass, "__name__");
       const char *handler_class_name = PyUnicode_AsUTF8(name_attr);
-      printf("path ------> %s\n", c_path);
-      printf("path ------> %s\n", handler_class_name);
+
       // get handler class methods
+      init_methods(methods);
+      get_class_methods(handlerClass, methods);
 
    }
-
-
-
    RegisteredRoute *single_route = registered_routes_init("/", "home");
    int err = registered_routes_insert(single_route, "/blogs", "blog_handler");
 
@@ -52,6 +61,25 @@ void crouter(PyObject *py_routes) {
    }
    free(single_route);
 }
+
+static void get_class_methods(PyObject *handler_class, char *methods[MAX_METHODS])
+{
+   int index = 0;
+   if (PyObject_HasAttrString(handler_class, "get"))     methods[index++] = "GET";
+   if (PyObject_HasAttrString(handler_class, "post"))    methods[index++] = "POST";
+   if (PyObject_HasAttrString(handler_class, "delete"))  methods[index++] = "DELETE";
+   if (PyObject_HasAttrString(handler_class, "put"))     methods[index++] = "PUT";
+   if (PyObject_HasAttrString(handler_class, "patch"))   methods[index]   = "PATCH";
+}
+
+
+
+static void init_methods(char *methods[MAX_METHODS])
+{
+   for (int i = 0; i < MAX_METHODS; i++)
+      methods[i] = NULL;
+}
+
 
 RegisteredRoute *registered_routes_init(const char *path, const char *handler_name)
 {
