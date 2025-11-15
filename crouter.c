@@ -72,8 +72,6 @@ static void get_class_methods(PyObject *handler_class, char *methods[MAX_METHODS
    if (PyObject_HasAttrString(handler_class, "patch"))   methods[index]   = "PATCH";
 }
 
-
-
 static void init_methods(char *methods[MAX_METHODS])
 {
    for (int i = 0; i < MAX_METHODS; i++)
